@@ -1,19 +1,30 @@
 import { useRef, useState } from "react";
-import { SafeAreaView } from "react-native";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView, Image, Alert } from 'react-native';
 import listaPaises from "../api/listaPaises";
+import axios from 'axios';
+
+axios.defaults.url = 'https://restcountries.com/v3.1/';
 
 const Paises = () => {
     const [paises, setPaises] = useState(null);
     const [query, setQuery] = useState('');
 
     async function getPais() {
-        console.log(query);
-        await listaPaises.get(query)
-            .then((response) => {
+        try {
+            if (query === '') {
+                const response = await axios.get('all');
                 console.log(response.data);
                 setPaises(response.data);
-            });
+            } else {
+                console.log(query);
+                const response = await axios.get(`name/${query}`);
+                console.log(response.data);
+                setPaises(response.data);
+            }
+        } catch (error) {
+            console.log(error);
+            Alert.alert('', "País não encontrado!");
+        }
     }
 
     return (
@@ -38,22 +49,22 @@ export default Paises;
 const Listagem = ({ paises }) => {
     return (
         <ScrollView style={styles.container}>
-        {paises.map(pais => (
-            <View style={{flexDirection: "row"}}>
-                <Image 
-                    source={{uri: pais.flags.png}} 
-                    style={{width: 30, height: 20}}
-                />
-                <Text> {pais.name.common} - {pais.region}</Text>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => getPais()}
-                >
-                     <Text style={styles.buttonText}>Visualizar</Text>
-                </TouchableOpacity>
-            </View>
-            
-        ))}
+            {paises.map(pais => (
+                <View style={{ flexDirection: "row" }}>
+                    <Image
+                        source={{ uri: pais.flags.png }}
+                        style={{ width: 30, height: 20 }}
+                    />
+                    <Text> {pais.name.common} - {pais.region}</Text>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => getPais()}
+                    >
+                        <Text style={styles.buttonText}>Visualizar</Text>
+                    </TouchableOpacity>
+                </View>
+
+            ))}
         </ScrollView>
     );
 };
