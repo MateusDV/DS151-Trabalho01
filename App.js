@@ -1,11 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import Paises from './Forms/Paises'
 
 export default function App() {
+  const [currentScreen, setCurrentScreen] = useState('home');
+
+  const navigate = (screen) => {
+    setCurrentScreen(screen);
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+       <Paises/>
     </View>
   );
 }
