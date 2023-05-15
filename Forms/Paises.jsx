@@ -1,26 +1,24 @@
 import { useRef, useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView, Image, Alert } from 'react-native';
-import listaPaises from "../api/listaPaises";
-import axios from 'axios';
-
-axios.defaults.url = 'https://restcountries.com/v3.1/';
+import PaisesApiClient from "../api/api";
 
 const Paises = () => {
     const [paises, setPaises] = useState(null);
     const [query, setQuery] = useState('');
 
+    const client = new PaisesApiClient('https://restcountries.com/v3.1/');
+
     async function getPais() {
+        let response = '';
+        console.log(query);
         try {
             if (query === '') {
-                const response = await axios.get('all');
-                console.log(response.data);
-                setPaises(response.data);
+                response = await client.obterTodosPaises();
             } else {
-                console.log(query);
-                const response = await axios.get(`name/${query}`);
-                console.log(response.data);
-                setPaises(response.data);
+                response = await client.pesquisarPaises(query);
             }
+            console.log(response);
+            setPaises(response);
         } catch (error) {
             console.log(error);
             Alert.alert('', "País não encontrado!");
@@ -63,7 +61,6 @@ const Listagem = ({ paises }) => {
                         <Text style={styles.buttonText}>Visualizar</Text>
                     </TouchableOpacity>
                 </View>
-
             ))}
         </ScrollView>
     );
