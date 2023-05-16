@@ -4,7 +4,7 @@ export default class PaisesApiClient {
     }
 
     async obterTodosPaises(){
-        const resposta = await fetch(`${this.url}all`);
+        const resposta = await fetch(`${this.url}all?fields=name,region,flags`);
         return await resposta.json();
     }
 
