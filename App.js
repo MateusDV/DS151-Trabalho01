@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Paises from './Forms/Paises'
-
+import Paises from './Forms/Paises';
+import Detalhe from './Forms/Detalhe';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('home');
+  const [pais, setPais] = useState(null);
 
-  const navigate = (screen) => {
+  const navigate = (screen, pais) => {
+    console.log(`${screen} - ${pais}`);
     setCurrentScreen(screen);
+    setPais(pais);
   };
 
   return (
     <View style={styles.container}>
-       <Paises/>
+      {currentScreen === 'home' ? <Paises navigate={navigate}/> : null}
+      {currentScreen === 'pais' ? <Detalhe navigate={navigate} nome={pais}/> : null}
     </View>
   );
 }
